@@ -18,5 +18,8 @@ ext_modules = [
 setup(
     name='toolkit',
     packages=['toolkit'],
-    ext_modules=cythonize(ext_modules)
+    ext_modules=cythonize(
+        ext_modules,
+        include_path=['toolkit/utils']
+    )
 )

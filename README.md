@@ -1,3 +1,81 @@
+# Custom Readme
+
+### Overview
+```
+뭔가.. readme 가 친절해보이긴 한데.. 하라는 대로 해도 잘 안된다.
+내 환경 : 12900KF, 2*A6000, CUDA11.8, ubuntu22.04, pyenv+venv
+저는 아나콘다를 좋아하지 않습니다.
+```
+&nbsp;
+
+
+### Overall
+```
+pyenv install 3.7.6
+pyenv global 3.7.6
+python3 -m venv env
+source env/bin/activate
+
+pip install --upgrade pip
+pip install torch
+pip install opencv-python
+pip install numpy
+pip install pyyaml yacs tqdm colorama matplotlib cython tensorboardX
+
+python3 setup.py build_ext --inplace
+```
+&nbsp;
+
+
+### Environment Result
+```
+TBU
+```
+&nbsp;
+
+
+### Trouble shooting
+
+1. 빌드 문제
+```
+빌드 하라는 대로 하다가,
+python setup.py build_ext --inplace
+이거 하다가 아래의 에러를 만날 수 있음.
+toolkit/utils/region.pyx:11:8: 'c_region.pxd' not found
+
+setup.py 수정하면 됨.
+
+- before
+~
+setup(
+    name='toolkit',
+    packages=['toolkit'],
+    ext_modules=cythonize(ext_modules)
+)
+
+- after
+~
+setup(
+    name='toolkit',
+    packages=['toolkit'],
+    ext_modules=cythonize(
+        ext_modules,
+        include_path=['toolkit/utils']
+    )
+)
+```
+
+---
+&nbsp;
+&nbsp;
+&nbsp;
+
+
+
+# Origin Readme
+
+
+
 # PySOT
 
 **PySOT** is a software system designed by SenseTime Video Intelligence Research team. It implements state-of-the-art single object tracking algorithms, including [SiamRPN](http://openaccess.thecvf.com/content_cvpr_2018/html/Li_High_Performance_Visual_CVPR_2018_paper.html) and [SiamMask](https://arxiv.org/abs/1812.05050). It is written in Python and powered by the [PyTorch](https://pytorch.org) deep learning framework. This project also contains a Python port of toolkit for evaluating trackers.
