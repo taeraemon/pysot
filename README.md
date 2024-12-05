@@ -23,6 +23,21 @@ pip install numpy
 pip install pyyaml yacs tqdm colorama matplotlib cython tensorboardX
 
 python3 setup.py build_ext --inplace
+
+https://github.com/taeraemon/pysot/blob/master/MODEL_ZOO.md
+여기서
+https://drive.google.com/drive/folders/1Q4-1563iPwV6wSf_lBHDj5CPFiGSlEPG
+이거 다운받기
+experiments/siamrpn_r50_l234_dwxcorr/model.pth 경로로 넣기
+
+python tools/demo.py \
+--config experiments/siamrpn_r50_l234_dwxcorr/config.yaml \
+--snapshot experiments/siamrpn_r50_l234_dwxcorr/model.pth \
+--video demo/bag.avi
+
+이렇게 해보기.
+
+그러면 테스트 가능
 ```
 &nbsp;
 
@@ -38,9 +53,27 @@ TBU
 
 1. 빌드 문제
 ```
-빌드 하라는 대로 하다가,
+빌드 하라는 대로
 python setup.py build_ext --inplace
 이거 하다가 아래의 에러를 만날 수 있음.
+(env) tykim@tySM:~/Documents/Github-taeraemon/pysot$ python setup.py build_ext --inplace
+Compiling toolkit/utils/region.pyx because it changed.
+[1/1] Cythonizing toolkit/utils/region.pyx
+/home/tykim/Documents/Github-taeraemon/pysot/env/lib/python3.7/site-packages/Cython/Compiler/Main.py:381: FutureWarning: Cython directive 'language_level' not set, using '3str' for now (Py3). This has changed from earlier releases! File: /home/tykim/Documents/Github-taeraemon/pysot/toolkit/utils/region.pyx
+  tree = Parsing.p_module(s, pxd, full_module_name)
+
+Error compiling Cython file:
+------------------------------------------------------------
+...
+
+from libc.stdlib cimport malloc, free
+from libc.stdio cimport sprintf
+from libc.string cimport strlen
+
+cimport c_region
+        ^
+------------------------------------------------------------
+
 toolkit/utils/region.pyx:11:8: 'c_region.pxd' not found
 
 setup.py 수정하면 됨.
