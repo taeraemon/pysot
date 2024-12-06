@@ -10,6 +10,7 @@
 
 
 ### Overall
+- 준비
 ```
 pyenv install 3.7.6
 pyenv global 3.7.6
@@ -25,15 +26,20 @@ pip install pyyaml yacs tqdm colorama matplotlib cython tensorboardX
 python3 setup.py build_ext --inplace
 
 export PYTHONPATH=/path/to/pysot:$PYTHONPATH
-pysot/pysot으로 프로젝트 루트 내부의 pysot을 다시 가르켜야함
+export PYTHONPATH=/home/tykim/Documents/Github-taeraemon/pysot:$PYTHONPATH
+```
+&nbsp;
 
+- Demo tracker
+```
+- model.pth 적용
 https://github.com/taeraemon/pysot/blob/master/MODEL_ZOO.md
 여기서
 https://drive.google.com/drive/folders/1Q4-1563iPwV6wSf_lBHDj5CPFiGSlEPG
 이거 다운받기
 experiments/siamrpn_r50_l234_dwxcorr/model.pth 경로로 넣기
 
-python tools/demo.py \
+python3 tools/demo.py \
 --config experiments/siamrpn_r50_l234_dwxcorr/config.yaml \
 --snapshot experiments/siamrpn_r50_l234_dwxcorr/model.pth \
 --video demo/bag.avi
@@ -43,6 +49,12 @@ python tools/demo.py \
 그러면 테스트 가능
 ```
 &nbsp;
+
+- Test tracker
+
+
+- Eval tracker
+
 
 
 ### Environment Result
