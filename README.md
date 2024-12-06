@@ -62,14 +62,10 @@ testing_dataset/VOT2018/VOT2018.json에 배치.
 - 트래커 동작
 cd experiments/siamrpn_r50_l234_dwxcorr
 python3 -u ../../tools/test.py \
-	--snapshot model.pth \
-	--dataset VOT2018 \
-	--config config.yaml
+--snapshot model.pth \
+--dataset VOT2018 \
+--config config.yaml
 
-(env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ python3 -u ../../tools/test.py \
-        --snapshot model.pth \
-        --dataset VOT2018 \
-        --config config.yaml
 loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1][ WARN:0@1.390] global loadsave.cpp:241 findDecoder imread_('/home/tykim/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr/ants1/color/00000001.jpg'): can't open/read file: check file path/integrity
 loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1]
 Traceback (most recent call last):
@@ -94,7 +90,6 @@ VOT2018 데이터 가져와야 하는것임.
 
 여튼 데이터셋 넣고 돌리면
 
-(env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ python3 -u ../../tools/test.py    --snapshot model.pth    --dataset VOT2018       --config config.yaml
 loading VOT2018: 100%|█████████████████████████████████| 60/60 [00:00<00:00, 185.42it/s, zebrafish1]
 (  1) Video: ants1        Time:  2.2s Speed: 145.0fps Lost: 0
 (  2) Video: ants3        Time:  3.4s Speed: 168.3fps Lost: 2
@@ -109,7 +104,27 @@ model total lost: 54
 &nbsp;
 
 - Eval tracker
+```
+assume still in experiments/siamrpn_r50_l234_dwxcorr_8gpu
 
+python3 ../../tools/eval.py \
+--tracker_path ./results \
+--dataset VOT2018 \
+--num 1 \
+--tracker_prefix 'model'
+
+loading VOT2018: 100%|█████████████████████████████████| 60/60 [00:00<00:00, 183.36it/s, zebrafish1]
+eval ar: 100%|████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.47it/s]
+eval eao: 100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00,  2.95it/s]
+------------------------------------------------------------
+|Tracker Name| Accuracy | Robustness | Lost Number |  EAO  |
+------------------------------------------------------------
+|   model    |  0.607   |   0.253    |    54.0     | 0.387 |
+------------------------------------------------------------
+
+엥? 그냥 됨
+```
+&nbsp;
 
 
 ### Environment Result
