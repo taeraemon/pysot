@@ -51,7 +51,62 @@ python3 tools/demo.py \
 &nbsp;
 
 - Test tracker
+```
+- ~.json 다운
+https://drive.google.com/drive/folders/10cfXjwQQBQeu48XMf2xc_W1LucpistPI
+위에서 다 받기
+일단 VOT2018.json으로 해볼거임
+그거를
+testing_dataset/VOT2018/VOT2018.json에 배치.
 
+- 트래커 동작
+cd experiments/siamrpn_r50_l234_dwxcorr
+python3 -u ../../tools/test.py \
+	--snapshot model.pth \
+	--dataset VOT2018 \
+	--config config.yaml
+
+(env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ python3 -u ../../tools/test.py \
+        --snapshot model.pth \
+        --dataset VOT2018 \
+        --config config.yaml
+loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1][ WARN:0@1.390] global loadsave.cpp:241 findDecoder imread_('/home/tykim/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr/ants1/color/00000001.jpg'): can't open/read file: check file path/integrity
+loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1]
+Traceback (most recent call last):
+  File "../../tools/test.py", line 226, in <module>
+    main()
+  File "../../tools/test.py", line 58, in main
+    load_img=False)
+  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/__init__.py", line 32, in create_dataset
+    dataset = VOTDataset(**kwargs)
+  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/vot.py", line 119, in __init__
+    load_img=load_img)
+  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/vot.py", line 31, in __init__
+    init_rect, img_names, gt_rect, None, load_img)
+  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/video.py", line 27, in __init__
+    assert img is not None, self.img_names[0]
+AssertionError: /home/tykim/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr/ants1/color/00000001.jpg
+
+이런 에러 뜸
+
+VOT2018 데이터 가져와야 하는것임.
+개복잡함... 나중에 정리해서 따로 언급하겠음.
+
+여튼 데이터셋 넣고 돌리면
+
+(env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ python3 -u ../../tools/test.py    --snapshot model.pth    --dataset VOT2018       --config config.yaml
+loading VOT2018: 100%|█████████████████████████████████| 60/60 [00:00<00:00, 185.42it/s, zebrafish1]
+(  1) Video: ants1        Time:  2.2s Speed: 145.0fps Lost: 0
+(  2) Video: ants3        Time:  3.4s Speed: 168.3fps Lost: 2
+(  3) Video: bag          Time:  1.2s Speed: 161.4fps Lost: 0
+(  4) Video: ball1        Time:  0.6s Speed: 163.3fps Lost: 0
+...
+( 60) Video: zebrafish1   Time:  2.5s Speed: 160.1fps Lost: 0
+model total lost: 54
+
+이런식으로 결과 나옴.
+```
+&nbsp;
 
 - Eval tracker
 
