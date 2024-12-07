@@ -33,6 +33,7 @@ export PYTHONPATH=/home/tykim/Documents/Github-taeraemon/pysot:$PYTHONPATH
 - Demo tracker
 ```
 - model.pth 적용
+
 https://github.com/taeraemon/pysot/blob/master/MODEL_ZOO.md
 여기서
 https://drive.google.com/drive/folders/1Q4-1563iPwV6wSf_lBHDj5CPFiGSlEPG
@@ -50,79 +51,116 @@ python3 tools/demo.py \
 ```
 &nbsp;
 
-- Test tracker
+- Dataset Setup
+
+json Setup
 ```
-- ~.json 다운
 https://drive.google.com/drive/folders/10cfXjwQQBQeu48XMf2xc_W1LucpistPI
 위에서 다 받기
-일단 VOT2018.json으로 해볼거임
-그거를
-testing_dataset/VOT2018/VOT2018.json에 배치.
+VOT2018, OTB100을 주로 다룸.
 
-- 트래커 동작
+VOT2018.json -> testing_dataset/VOT2018/VOT2018.json
+OTB100.json  -> testing_dataset/VOT100/OTB100.json
+```
+VOT2018 Setup
+```
+스크립트를 활용해야하기 때문에,
+https://github.com/taeraemon/VOT_Downloader
+위 링크를 참조.
+```
+OTB100 Setup
+```
+http://cvlab.hanyang.ac.kr/tracker_benchmark/datasets.html/
+위 서버 안되어서 찾아보다가
+
+https://figshare.com/articles/dataset/OTB2015/24427468/1?file=42879853
+https://www.kaggle.com/datasets/zly1402875051/otb2015/data
+https://cv.gluon.ai/build/examples_datasets/otb2015.html
+위 3개의 서버로 다운로드 가능한 것을 확인 !
+안돌아가서 디버깅 하다가, 마지막 서버에서 아래의 내용 확인
+
+https://cv.gluon.ai/_downloads/719c5c0d73fb22deacc84b4557b6fd5f/otb2015.py
+    os.rename(os.path.join(args,'Jogging'),os.path.join(args,'Jogging-1'))
+    os.rename(os.path.join(args,'Jogging'),os.path.join(args,'Jogging-2'))
+    os.rename(os.path.join(args,'Skating2'),os.path.join(args,'Skating2-1'))
+    os.rename(os.path.join(args,'Skating2'),os.path.join(args,'Skating2-2'))
+    os.rename(os.path.join(args,' Human4'),os.path.join(args,'Human4-2'))
+위에 나온대로,
+Jogging  -> Jogging-1, Jogging-2로 복사해서 만듬
+Skating2 -> Skating2-1, Skating2-2로 복사해서 만듬
+Human4   -> Human4-2로 이름 변경
+이렇게 하니까 다 돌아감!
+```
+&nbsp;
+
+
+- Test tracker
+
+Dataset ready
+```
+아래와 같이 데이터셋을 복사해 넣어두고 진행. (VOT2018 예시)
+experiments/siamrpn_r50_l234_dwxcorr
+    /ants1
+    /ants3
+    ...
+```
+VOT2018 version
+```
 cd experiments/siamrpn_r50_l234_dwxcorr
 python3 -u ../../tools/test.py \
 --snapshot model.pth \
 --dataset VOT2018 \
 --config config.yaml
-
-loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1][ WARN:0@1.390] global loadsave.cpp:241 findDecoder imread_('/home/tykim/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr/ants1/color/00000001.jpg'): can't open/read file: check file path/integrity
-loading VOT2018:   0%|                                                | 0/60 [00:00<?, ?it/s, ants1]
-Traceback (most recent call last):
-  File "../../tools/test.py", line 226, in <module>
-    main()
-  File "../../tools/test.py", line 58, in main
-    load_img=False)
-  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/__init__.py", line 32, in create_dataset
-    dataset = VOTDataset(**kwargs)
-  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/vot.py", line 119, in __init__
-    load_img=load_img)
-  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/vot.py", line 31, in __init__
-    init_rect, img_names, gt_rect, None, load_img)
-  File "/home/tykim/Documents/Github-taeraemon/pysot/toolkit/datasets/video.py", line 27, in __init__
-    assert img is not None, self.img_names[0]
-AssertionError: /home/tykim/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr/ants1/color/00000001.jpg
-
-이런 에러 뜸
-
-VOT2018 데이터 가져와야 하는것임.
-개복잡함... 나중에 정리해서 따로 언급하겠음.
-
-여튼 데이터셋 넣고 돌리면
-
+```
+OTB100 version
+```
+cd experiments/siamrpn_r50_l234_dwxcorr
+python3 -u ../../tools/test.py \
+--snapshot model.pth \
+--dataset OTB100 \
+--config config.yaml
+```
+Expected Result (VOT2018 예시)
+```
 loading VOT2018: 100%|█████████████████████████████████| 60/60 [00:00<00:00, 185.42it/s, zebrafish1]
 (  1) Video: ants1        Time:  2.2s Speed: 145.0fps Lost: 0
 (  2) Video: ants3        Time:  3.4s Speed: 168.3fps Lost: 2
-(  3) Video: bag          Time:  1.2s Speed: 161.4fps Lost: 0
-(  4) Video: ball1        Time:  0.6s Speed: 163.3fps Lost: 0
 ...
 ( 60) Video: zebrafish1   Time:  2.5s Speed: 160.1fps Lost: 0
 model total lost: 54
-
-이런식으로 결과 나옴.
 ```
 &nbsp;
 
 - Eval tracker
-```
-assume still in experiments/siamrpn_r50_l234_dwxcorr_8gpu
 
+VOT2018 version
+```
+experiments/siamrpn_r50_l234_dwxcorr 경로에 있다고 가정
 python3 ../../tools/eval.py \
 --tracker_path ./results \
 --dataset VOT2018 \
 --num 1 \
 --tracker_prefix 'model'
-
+```
+OTB100 version 
+```
+experiments/siamrpn_r50_l234_dwxcorr 경로에 있다고 가정
+python3 ../../tools/eval.py \
+--tracker_path ./results \
+--dataset OTB100 \
+--num 1 \
+--tracker_prefix 'model'
+```
+Expected Result (VOT2018 예시)
+```
 loading VOT2018: 100%|█████████████████████████████████| 60/60 [00:00<00:00, 183.36it/s, zebrafish1]
-eval ar: 100%|████████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.47it/s]
+eval ar:  100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00,  3.47it/s]
 eval eao: 100%|███████████████████████████████████████████████████████| 1/1 [00:00<00:00,  2.95it/s]
 ------------------------------------------------------------
 |Tracker Name| Accuracy | Robustness | Lost Number |  EAO  |
 ------------------------------------------------------------
 |   model    |  0.607   |   0.253    |    54.0     | 0.387 |
 ------------------------------------------------------------
-
-엥? 그냥 됨
 ```
 &nbsp;
 
