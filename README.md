@@ -165,6 +165,106 @@ eval eao: 100%|█████████████████████�
 &nbsp;
 
 
+- Train tracker
+
+ILSVRC2015 다운로드
+```
+wget http://bvisionweb1.cs.unc.edu/ilsvrc2015/ILSVRC2015_VID.tar.gz
+tar -xzvf ./ILSVRC2015_VID.tar.gz
+
+위 대로 하면 된다고 하는데, 이전에 다운받아놓은게 있어서 위에꺼 안해봄.
+training_dataset/vid 밑에 작업하려면
+.gitignore에 ILSVRC2015, crop511, vid.json 미리 추가해두기 (안하면 vscode 뇌정지)
+```
+4개 다 말고 ILSVRC2015 만 가지고 학습하는 거로 수정
+```
+# __C.DATASET.NAMES = ('VID', 'COCO', 'DET', 'YOUTUBEBB')
+__C.DATASET.NAMES = ('VID',)
+
+__C.DATASET.VID = CN()
+__C.DATASET.VID.ROOT = 'training_dataset/vid/crop511'
+__C.DATASET.VID.ANNO = 'training_dataset/vid/train.json'
+__C.DATASET.VID.FRAME_RANGE = 100
+__C.DATASET.VID.NUM_USE = 100000  # repeat until reach NUM_USE
+
+# __C.DATASET.YOUTUBEBB = CN()
+# __C.DATASET.YOUTUBEBB.ROOT = 'training_dataset/yt_bb/crop511'
+# __C.DATASET.YOUTUBEBB.ANNO = 'training_dataset/yt_bb/train.json'
+# __C.DATASET.YOUTUBEBB.FRAME_RANGE = 3
+# __C.DATASET.YOUTUBEBB.NUM_USE = -1  # use all not repeat
+
+# __C.DATASET.COCO = CN()
+# __C.DATASET.COCO.ROOT = 'training_dataset/coco/crop511'
+# __C.DATASET.COCO.ANNO = 'training_dataset/coco/train2017.json'
+# __C.DATASET.COCO.FRAME_RANGE = 1
+# __C.DATASET.COCO.NUM_USE = -1
+
+# __C.DATASET.DET = CN()
+# __C.DATASET.DET.ROOT = 'training_dataset/det/crop511'
+# __C.DATASET.DET.ANNO = 'training_dataset/det/train.json'
+# __C.DATASET.DET.FRAME_RANGE = 1
+# __C.DATASET.DET.NUM_USE = -1
+
+pysot/core/config.py를 위와같이 ILSVRC2015 만으로 학습시키려고 수정.
+__C.DATASET.NAMES = ('VID',) 이런식으로 뒤에 컴마 있어야 함 (신기방기)
+```
+하라는대로 하기 season1
+```
+cd training_dataset
+ln -sfb $PWD/ILSVRC2015/Annotations/VID/train/ILSVRC2015_VID_train_0000    ILSVRC2015/Annotations/VID/train/a
+ln -sfb $PWD/ILSVRC2015/Annotations/VID/train/ILSVRC2015_VID_train_0001    ILSVRC2015/Annotations/VID/train/b
+ln -sfb $PWD/ILSVRC2015/Annotations/VID/train/ILSVRC2015_VID_train_0002    ILSVRC2015/Annotations/VID/train/c
+ln -sfb $PWD/ILSVRC2015/Annotations/VID/train/ILSVRC2015_VID_train_0003    ILSVRC2015/Annotations/VID/train/d
+ln -sfb $PWD/ILSVRC2015/Annotations/VID/val                                ILSVRC2015/Annotations/VID/train/e
+
+ln -sfb $PWD/ILSVRC2015/Data/VID/train/ILSVRC2015_VID_train_0000    ILSVRC2015/Data/VID/train/a
+ln -sfb $PWD/ILSVRC2015/Data/VID/train/ILSVRC2015_VID_train_0001    ILSVRC2015/Data/VID/train/b
+ln -sfb $PWD/ILSVRC2015/Data/VID/train/ILSVRC2015_VID_train_0002    ILSVRC2015/Data/VID/train/c
+ln -sfb $PWD/ILSVRC2015/Data/VID/train/ILSVRC2015_VID_train_0003    ILSVRC2015/Data/VID/train/d
+ln -sfb $PWD/ILSVRC2015/Data/VID/val                                ILSVRC2015/Data/VID/train/e
+```
+하라는대로 하기 season2 (아마 20분정도 소요..?)
+```
+python3 parse_vid.py
+(xml들을 읽어서 vid.json으로 변환)
+
+python3 par_crop.py 511 12 (26분 걸림)
+(학습에 입력될 템플릿을 크롭)
+
+python3 gen_json.py
+(vid.json을 읽어서 train.json, val.json을 생성)
+
+여튼 여기까지 제대로 안하면
+FileNotFoundError: [Errno 2] No such file or directory: '/home/tykim/Documents/Github-taeraemon/pysot/pysot/datasets/../../training_dataset/vid/train.json'
+이런거 떴었음.
+```
+이제 진짜 학습
+```
+export CUDA_VISIBLE_DEVICES=0,1
+export OMP_NUM_THREADS=4
+
+python3 -m torch.distributed.launch \
+--nproc_per_node=2 \
+--master_port=2333 \
+../../tools/train.py --cfg config.yaml
+
+내 환경은 A6000 2개
+따라서 nproc_per_node는 내 GPU 개수
+GPU가 메인이지 CPU가 메인이 아니라서 OMP_NUM_THREADS는 적당히 4정도.
+```
+Expected Result
+```
+[2024-12-07 23:40:02,081-rk0-train.py#249] Epoch: [1][380/9375] lr: 0.010000
+        batch_time: 0.255338 (0.255625) data_time: 0.000201 (0.000221)
+        cls_loss: 0.217716 (0.221119)   loc_loss: 0.300861 (0.308214)
+        total_loss: 0.578749 (0.590975)
+[2024-12-07 23:40:02,081-rk0-log_helper.py#105] Progress: 380 / 187500 [0%], Speed: 0.256 s/iter, ETA 0:13:17 (D:H:M)
+
+TBU
+```
+&nbsp;
+
+
 ### Environment Result
 ```
 (env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ pip list

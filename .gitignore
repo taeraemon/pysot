@@ -109,3 +109,8 @@ experiments
 # tykim
 .vscode
 _tykim_download
+ILSVRC2015
+crop511
+vid.json
+train.json
+val.json
