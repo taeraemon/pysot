@@ -13,6 +13,7 @@ from toolkit.datasets import OTBDataset, UAVDataset, LaSOTDataset, \
         VOTDataset, NFSDataset, VOTLTDataset
 from toolkit.evaluation import OPEBenchmark, AccuracyRobustnessBenchmark, \
         EAOBenchmark, F1Benchmark
+from toolkit.visualization import draw_success_precision
 
 parser = argparse.ArgumentParser(description='tracking evaluation')
 parser.add_argument('--tracker_path', '-p', type=str,
@@ -58,6 +59,14 @@ def main():
                 precision_ret.update(ret)
         benchmark.show_result(success_ret, precision_ret,
                 show_video_level=args.show_video_level)
+        
+        # Drawing (reference from pysot-toolkit)
+        for attr, videos in dataset.attr.items():
+            draw_success_precision(success_ret,
+                        name=dataset.name,
+                        videos=videos,
+                        attr=attr,
+                        precision_ret=precision_ret)
     elif 'LaSOT' == args.dataset:
         dataset = LaSOTDataset(args.dataset, root)
         dataset.set_tracker(tracker_dir, trackers)

@@ -4,8 +4,8 @@ import numpy as np
 from matplotlib import rc
 from .draw_utils import COLOR, LINE_STYLE
 
-rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-rc('text', usetex=True)
+# rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+# rc('text', usetex=True)
 
 def draw_f1(result, bold_name=None):
     # drawing f1 contour
@@ -20,7 +20,8 @@ def draw_f1(result, bold_name=None):
     plt.xlabel('Recall')
     plt.ylabel('Precision')
     plt.axis([0, 1, 0, 1])
-    plt.title(r'\textbf{VOT2018-LT Precision vs Recall}')
+    # plt.title(r'\textbf{VOT2018-LT Precision vs Recall}')
+    plt.title(f'VOT2018-LT Precision vs Recall')
 
     # draw result line
     all_precision = {}
@@ -40,7 +41,8 @@ def draw_f1(result, bold_name=None):
     for idx, (tracker_name, best_f1) in \
             enumerate(sorted(best_f1.items(), key=lambda x:x[1], reverse=True)):
         if tracker_name == bold_name:
-            label = r"\textbf{[%.3f] Ours}" % (best_f1)
+            # label = r"\textbf{[%.3f] Ours}" % (best_f1)
+            label = f"[{best_f1:.3f}] Ours"
         else:
             label = "[%.3f] " % (best_f1) + tracker_name
         recall = all_recall[tracker_name][:-1]
@@ -53,7 +55,9 @@ def draw_f1(result, bold_name=None):
     ax.legend(loc='lower right', labelspacing=0.2)
     plt.xticks(np.arange(0, 1+0.1, 0.1))
     plt.yticks(np.arange(0, 1+0.1, 0.1))
-    plt.show()
+    # plt.show()
+    plt.savefig('5')
+    plt.close(fig)
 
 if __name__ == '__main__':
     draw_f1(None)

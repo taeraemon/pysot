@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from datetime import datetime
 
 from .draw_utils import COLOR, LINE_STYLE
 
@@ -12,9 +13,11 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
     plt.xlabel('Overlap threshold')
     plt.ylabel('Success rate')
     if attr == 'ALL':
-        plt.title(r'\textbf{Success plots of OPE on %s}' % (name))
+        # plt.title(r'\textbf{Success plots of OPE on %s}' % (name))
+        plt.title(f'Success plots of OPE on {name}')
     else:
-        plt.title(r'\textbf{Success plots of OPE - %s}' % (attr))
+        # plt.title(r'\textbf{Success plots of OPE - %s}' % (attr))
+        plt.title(f'Success plots of OPE - {attr}')
     plt.axis([0, 1]+axis)
     success = {}
     thresholds = np.arange(0, 1.05, 0.05)
@@ -24,7 +27,8 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
     for idx, (tracker_name, auc) in  \
             enumerate(sorted(success.items(), key=lambda x:x[1], reverse=True)):
         if tracker_name == bold_name:
-            label = r"\textbf{[%.3f] %s}" % (auc, tracker_name)
+            # label = r"\textbf{[%.3f] %s}" % (auc, tracker_name)
+            label = f"[{auc:.3f}] {tracker_name}"
         else:
             label = "[%.3f] " % (auc) + tracker_name
         value = [v for k, v in success_ret[tracker_name].items() if k in videos]
@@ -39,7 +43,12 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
     plt.xticks(np.arange(xmin, xmax+0.01, 0.1))
     plt.yticks(np.arange(ymin, ymax, 0.1))
     ax.set_aspect((xmax - xmin)/(ymax-ymin))
-    plt.show()
+    # plt.show()
+    
+    current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+    filename = f"figure_{current_time}.png"
+    plt.savefig(filename)
+    plt.close(fig)
 
     if precision_ret:
         # norm precision plot
@@ -49,9 +58,11 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         plt.xlabel('Location error threshold')
         plt.ylabel('Precision')
         if attr == 'ALL':
-            plt.title(r'\textbf{Precision plots of OPE on %s}' % (name))
+            # plt.title(r'\textbf{Precision plots of OPE on %s}' % (name))
+            plt.title(f'Precision plots of OPE on {name}')
         else:
-            plt.title(r'\textbf{Precision plots of OPE - %s}' % (attr))
+            # plt.title(r'\textbf{Precision plots of OPE - %s}' % (attr))
+            plt.title(f'Precision plots of OPE - {attr}')
         plt.axis([0, 50]+axis)
         precision = {}
         thresholds = np.arange(0, 51, 1)
@@ -61,7 +72,8 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         for idx, (tracker_name, pre) in \
                 enumerate(sorted(precision.items(), key=lambda x:x[1], reverse=True)):
             if tracker_name == bold_name:
-                label = r"\textbf{[%.3f] %s}" % (pre, tracker_name)
+                # label = r"\textbf{[%.3f] %s}" % (pre, tracker_name)
+                label = f"[{pre:.3f}] {tracker_name}"
             else:
                 label = "[%.3f] " % (pre) + tracker_name
             value = [v for k, v in precision_ret[tracker_name].items() if k in videos]
@@ -76,7 +88,12 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         plt.xticks(np.arange(xmin, xmax+0.01, 5))
         plt.yticks(np.arange(ymin, ymax, 0.1))
         ax.set_aspect((xmax - xmin)/(ymax-ymin))
-        plt.show()
+        # plt.show()
+        
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        filename = f"figure_{current_time}.png"
+        plt.savefig(filename)
+        plt.close(fig)
 
     # norm precision plot
     if norm_precision_ret:
@@ -85,9 +102,11 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         plt.xlabel('Location error threshold')
         plt.ylabel('Precision')
         if attr == 'ALL':
-            plt.title(r'\textbf{Normalized Precision plots of OPE on %s}' % (name))
+            # plt.title(r'\textbf{Normalized Precision plots of OPE on %s}' % (name))
+            plt.title(f'Normalized Precision plots of OPE on {name}')
         else:
-            plt.title(r'\textbf{Normalized Precision plots of OPE - %s}' % (attr))
+            # plt.title(r'\textbf{Normalized Precision plots of OPE - %s}' % (attr))
+            plt.title(f'Normalized Precision plots of OPE - {attr}')
         norm_precision = {}
         thresholds = np.arange(0, 51, 1) / 100
         for tracker_name in precision_ret.keys():
@@ -96,7 +115,8 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         for idx, (tracker_name, pre) in \
                 enumerate(sorted(norm_precision.items(), key=lambda x:x[1], reverse=True)):
             if tracker_name == bold_name:
-                label = r"\textbf{[%.3f] %s}" % (pre, tracker_name)
+                # label = r"\textbf{[%.3f] %s}" % (pre, tracker_name)
+                label = f"[{pre:.3f}] {tracker_name}"
             else:
                 label = "[%.3f] " % (pre) + tracker_name
             value = [v for k, v in norm_precision_ret[tracker_name].items() if k in videos]
@@ -111,4 +131,9 @@ def draw_success_precision(success_ret, name, videos, attr, precision_ret=None,
         plt.xticks(np.arange(xmin, xmax+0.01, 0.05))
         plt.yticks(np.arange(ymin, ymax, 0.1))
         ax.set_aspect((xmax - xmin)/(ymax-ymin))
-        plt.show()
+        # plt.show()
+        
+        current_time = datetime.now().strftime("%Y%m%d_%H%M%S_%f")
+        filename = f"figure_{current_time}.png"
+        plt.savefig(filename)
+        plt.close(fig)

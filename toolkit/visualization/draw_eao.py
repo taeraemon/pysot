@@ -5,8 +5,8 @@ import pickle
 from matplotlib import rc
 from .draw_utils import COLOR, MARKER_STYLE
 
-rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
-rc('text', usetex=True)
+# rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+# rc('text', usetex=True)
 
 def draw_eao(result):
     fig = plt.figure()
@@ -42,7 +42,9 @@ def draw_eao(result):
     ax.grid(b=False)
     ax.set_ylim(0, 1.18)
     ax.set_yticks([])
-    plt.show()
+    # plt.show()
+    plt.savefig('4')
+    plt.close(fig)
 
 if __name__ == '__main__':
     result = pickle.load(open("../../result.pkl", 'rb'))
