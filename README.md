@@ -167,7 +167,39 @@ eval eao: 100%|█████████████████████�
 
 ### Environment Result
 ```
-TBU
+(env) tykim@tySM:~/Documents/Github-taeraemon/pysot/experiments/siamrpn_r50_l234_dwxcorr$ pip list
+Package                  Version
+------------------------ -----------
+colorama                 0.4.6
+cycler                   0.11.0
+Cython                   3.0.11
+fonttools                4.38.0
+kiwisolver               1.4.5
+matplotlib               3.5.3
+numpy                    1.21.6
+nvidia-cublas-cu11       11.10.3.66
+nvidia-cuda-nvrtc-cu11   11.7.99
+nvidia-cuda-runtime-cu11 11.7.99
+nvidia-cudnn-cu11        8.5.0.96
+opencv-python            4.10.0.84
+packaging                24.0
+Pillow                   9.5.0
+pip                      24.0
+protobuf                 4.24.4
+pyparsing                3.1.4
+PyQt5-Qt5                5.15.15
+PyQt5-sip                12.13.0
+python-dateutil          2.9.0.post0
+PyYAML                   6.0.1
+setuptools               41.2.0
+shapely                  2.0.6
+six                      1.17.0
+tensorboardX             2.6.2.2
+torch                    1.13.1
+tqdm                     4.67.1
+typing_extensions        4.7.1
+wheel                    0.42.0
+yacs                     0.1.8
 ```
 &nbsp;
 
